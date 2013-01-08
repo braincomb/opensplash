@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+#######################################
+# opensplash-devel | Oct 15, 2003
+# OpenSplash - Wireless Captive Portal
+# Copyright (c) Aleksandr Melentiev
+# See LICENSE for copyright information
+#######################################
+
+require 5.004;
+use Fcntl qw(:DEFAULT);
+use NDBM_File;
+
+# Import the configuration file
+# EDIT THIS PATH MANUALLY IF DIFFERENT!
+require '/usr/local/opensplash/splash.cfg'; 1;
+
+# Check if UID is 0
+unless ($> == 0 || $< == 0) { die "You must be root to run this daemon!\n" }
+
+open(PIDFILE,">$pidfile") or die "Can't open $pidfile: $!\n";
+print PIDFILE "$$\n";
+close(PIDFILE);
+
+# Signal handler
+$sigterm = 0;
+$SIG{'TERM'} = 'sigtermcat';
+sub sigtermcat {
+        $sigterm = 1;
+}
+
+# Add the forwarding rule
+system("ipfw -q add $fwdrulenum $setnum fwd $gateway tcp from $wnet to any $fwdports");
+# Deny wireless users access to your private network
+$denyrulenum = $fwdrulenum + 1;
+system("ipfw -q add $denyrulenum $setnum deny all from $wnet to $pnet"); 
+
+$rulenum = $fwdrulenum;
+
+while (1) {
+	if (-e "$dbfile.db") {
+		tie %hash, "NDBM_File", $dbfile, O_RDWR, 0644;
+		$ip = $hash{userip};
+		$dup = `ipfw show | grep -w "$ip"`;
+			if ($dup) {
+			# continue scanning...
+			} else {
+			$rulenum--;
+			system("ipfw -q add $rulenum $setnum allow all from $ip to any");
+			}
+        	#sleep 1;
+		untie %hash;
+	}
+		sleep 1;
+	if ($sigterm) { # Clean up!
+		system("ipfw -q delete $setnum");
+		unlink("$dbfile.db");
+		exit(0);
+	}
+}
+
+exit(0);

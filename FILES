@@ -1,0 +1,40 @@
+These are the files and their descriptions...
+
+FILES:
+You are reading it right now
+
+CHANGELOG:
+Reflects changes that have been made to the source code
+
+README:
+Essential information to get you started
+
+LICENSE:
+Copyright information
+
+Makefile:
+Calls the installation script
+
+install.sh:
+Installation script, tries to determine, configure and install
+much of the stuff automatically for you
+
+opensplash:
+A Perl executable, core program
+
+opensplash.conf:
+An Apache configuration file designed to work with our program
+
+splash.cfg:
+Configuration file required by the core program
+
+rc.sh:
+Startup script which will be placed in /usr/local/etc/rc.d
+and renamed to opensplash.sh
+
+htdocs/index.html:
+Webpage that will be shown to each unauthorized wireless user
+
+htdocs/grant.pl:
+A Perl script that places the users' IP addresses into the hash file
+for the core program to read 

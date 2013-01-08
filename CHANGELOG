@@ -1,0 +1,36 @@
+CHANGELOG
+
+  - 0.3-devel (10/15/03)
+
+  * Added SIGTERM signal handling for a proper cleanup
+  * Added new IPFW2 set grouping capabilities
+  * New value entries in splash.cfg file
+  * Now using absolute path for the splash.cfg file import in core program, thus
+    fixing the problem with boot and rc.d startup cases. Path must be edited manually
+    for now if different from default install
+ 
+  - 0.2e (4/23/03)
+
+  * Check if we are successfully running ipfw before the install
+  * Fixed the `pid not found' error when running the startup script
+  * Fixed when Apache didn't start at boot up
+  * Fixed an IP duplicate check, made it more precise to only match
+    the `whole-word' IP addresses
+  * Placed configuration variables in a separate file splash.cfg
+  * General code restructure and use of subroutines, preparation for ipfw2
+
+  - 0.2f (4/20/03)
+
+  * Initially check for existance of the DB file before we actually open the hash file 
+    This caused ipfw to add a bogus rule if file didn't exist at startup
+  * Move the rule counter and sleep timer, so that we can correctly decrement
+
+  - 0.2 (4/19/03)
+
+  * Use Perl instead of PHP for the HTML form
+  * Use NDBM_File (hash) instead of the DB_File (btree)
+
+  - 0.1 (4/17/03)
+
+  * Initial alpha release
+

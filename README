@@ -1,0 +1,73 @@
+OpenSplash 0.2e (4/23/03)
+Copyright (c) Aleksandr Melentiev
+E-Mail: tzapper@users.sourceforge.net
+See LICENSE for copyright information
+
+
+--
+How to install?
+--
+
+You have to be root to install OpenSplash, since it installs
+files that need super-user permissions. To install, just type:
+
+	make install
+
+This will ask you several questions regarding the locations and
+then will automatically do the setup for you.
+
+
+--
+What files to edit?                                              
+--
+
+The splash.cfg file contains settings that need to be edited.
+Also edit the supplied Apache configuration file. Specify
+which IP it should listen to. Defalt port is 8080. If you have
+changed the installation directory, change the htdocs in Apache
+file too.
+
+
+--
+How to start?
+--
+
+A startup script is copied into /usr/local/etc/rc.d. Just type:
+
+	/usr/local/etc/rc.d/opensplash.sh start
+
+This will start both the daemon and Apache tied to our 
+configuration file.
+
+
+--
+How to enable ipfw?
+--
+
+NOTE, starting from version 0.3 only IPFW2 is supported, 4-STABLE
+users will need to enable IPFW2 support in the kernel, in 5.x IPFW2
+is used by default so no worries.
+
+ipfw can be either statically compiled or dynamically loaded.
+Add these options in your kernel config file and recompile:
+
+	options IPFIREWALL
+	options IPFW2 # (4-STABLE only)
+	options IPFIREWALL_FORWARD # transparent proxy support
+	options DUMMYNET # for bandwidth throttling (future versions)
+
+In addition, add this line to /etc/rc.conf:
+
+	firewall_enable="YES"
+
+Alternatively, you can load ipfw dynamically, type this as root:
+
+	kldload ipfw
+
+For a more detailed information, consider looking at
+http://www.freebsd-howto.com/HOWTO/Ipfw-HOWTO 
+
+
+--
+For more documentation and information please visit
+http://opensplash.qalab.com
